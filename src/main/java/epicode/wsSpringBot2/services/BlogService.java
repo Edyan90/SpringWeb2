@@ -1,9 +1,9 @@
 package epicode.wsSpringBot2.services;
 
 
+import epicode.wsSpringBot2.RecordDTO.BlogPostBody;
 import epicode.wsSpringBot2.entities.Author;
 import epicode.wsSpringBot2.entities.Blog;
-import epicode.wsSpringBot2.entities.BlogPostBody;
 import epicode.wsSpringBot2.exceptions.NotFoundEx;
 import epicode.wsSpringBot2.repositories.BlogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,19 +31,19 @@ public class BlogService {
     }
 
     public Blog save(BlogPostBody blogBody) {
-        Author autore = authorService.findByID(blogBody.getAutoreID());
-        Blog blog = new Blog(blogBody.getCategoria(), blogBody.getTitolo(), blogBody.getContenuto(), blogBody.getTempoDiLettura(), autore);
+        Author autore = authorService.findByID(blogBody.autoreID());
+        Blog blog = new Blog(blogBody.categoria(), blogBody.titolo(), blogBody.contenuto(), blogBody.tempoDiLettura(), autore);
         blog.setCover("https://picsum.photos/id/1/200/300");
         return this.blogRepository.save(blog);
     }
 
-    public Blog update(UUID blogID, Blog blogUpdate) {
+    public Blog update(UUID blogID, BlogPostBody blogUpdate) {
         Blog found = findByID(blogID);
-        found.setCategoria(blogUpdate.getCategoria());
-        found.setTitolo(blogUpdate.getTitolo());
-        found.setContenuto(blogUpdate.getContenuto());
-        found.setTempoDiLettura(blogUpdate.getTempoDiLettura());
-        Author autore = authorService.findByID(blogUpdate.getId());
+        found.setCategoria(blogUpdate.categoria());
+        found.setTitolo(blogUpdate.titolo());
+        found.setContenuto(blogUpdate.contenuto());
+        found.setTempoDiLettura(blogUpdate.tempoDiLettura());
+        Author autore = authorService.findByID(blogUpdate.autoreID());
         found.setAuthor(autore);
 
         return found;

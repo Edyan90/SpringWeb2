@@ -1,6 +1,7 @@
 package epicode.wsSpringBot2.services;
 
 
+import epicode.wsSpringBot2.RecordDTO.NewAuthorDTO;
 import epicode.wsSpringBot2.entities.Author;
 import epicode.wsSpringBot2.exceptions.BadRequestEx;
 import epicode.wsSpringBot2.exceptions.NotFoundEx;
@@ -32,20 +33,26 @@ public class AuthorService {
         return this.authorRepository.findById(authorID).orElseThrow(() -> new NotFoundEx(authorID));
     }
 
-    public Author save(Author body) {
-        this.authorRepository.findByEmail(body.getEmail()).ifPresent(user -> {
-            throw new BadRequestEx("L'email " + body.getEmail() + " è già in uso!");
+    public Author save(NewAuthorDTO body) {
+        this.authorRepository.findByEmail(body.email()).ifPresent(user -> {
+            throw new BadRequestEx("L'email " + body.email() + " è già in uso!");
         });
-        body.setAvatar("https://ui-avatars.com/api/?name=" + body.getNome() + "+" + body.getCognome());
-        return this.authorRepository.save(body);
+        Author newAuthor = new Author(body.nome(),
+                body.cognome(),
+                body.email(),
+                body.dataDiNascita()
+        );
+        newAuthor.setAvatar("https://ui-avatars.com/api/?name=" + body.nome() + "+" + body.cognome());
+
+        return this.authorRepository.save(newAuthor);
     }
 
-    public Author update(UUID authorID, Author authorUpdate) {
+    public Author update(UUID authorID, NewAuthorDTO authorUpdate) {
         Author found = findByID(authorID);
-        found.setNome(authorUpdate.getNome());
-        found.setCognome(authorUpdate.getCognome());
-        found.setEmail(authorUpdate.getEmail());
-        found.setDataDiNascita(authorUpdate.getDataDiNascita());
+        found.setNome(authorUpdate.nome());
+        found.setCognome(authorUpdate.cognome());
+        found.setEmail(authorUpdate.email());
+        found.setDataDiNascita(authorUpdate.dataDiNascita());
         return authorRepository.save(found);
     }
 
