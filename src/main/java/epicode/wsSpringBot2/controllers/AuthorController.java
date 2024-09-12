@@ -10,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -70,5 +72,10 @@ public class AuthorController {
     private void findandDelete(@PathVariable UUID authorID) {
         as.findByIDandDelete(authorID);
 
+    }
+
+    @PostMapping("/{authorID}/avatar")
+    public void uploadAvatar(@PathVariable UUID authorID, @RequestParam("avatar") MultipartFile image) throws IOException {
+        this.as.uploadImage(authorID, image);
     }
 }

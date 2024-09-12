@@ -1,6 +1,8 @@
 package epicode.wsSpringBot2.services;
 
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import epicode.wsSpringBot2.RecordDTO.NewAuthorDTO;
 import epicode.wsSpringBot2.entities.Author;
 import epicode.wsSpringBot2.exceptions.BadRequestEx;
@@ -12,13 +14,18 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @Service
 public class AuthorService {
     @Autowired
     private AuthorRepository authorRepository;
+
+    @Autowired
+    private Cloudinary cloudinary;
 
     //    public List<Author> findAll() {
 //        return this.authorRepository.findAll();
@@ -60,5 +67,13 @@ public class AuthorService {
         Author found = findByID(authorID);
         authorRepository.delete(found);
         System.out.println("eliminato!");
+    }
+
+    public Author uploadImage(UUID authorID, MultipartFile file) throws IOException {
+        String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        System.out.println("URL: " + url);
+        Author autore = findByID(authorID);
+        autore.setAvatar(url);
+        return autore;
     }
 }

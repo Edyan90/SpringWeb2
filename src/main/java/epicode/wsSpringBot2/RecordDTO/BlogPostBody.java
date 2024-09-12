@@ -11,7 +11,7 @@ public record BlogPostBody(
         String categoria,
 
         @NotEmpty(message = "manca il titolo")
-        @Size(min = 3, max = 20, message = "il titolo deve avere un minimo di 2 ad un massimo di 20 caratteri")
+        @Size(min = 3, max = 100, message = "il titolo deve avere un minimo di 2 ad un massimo di 20 caratteri")
         String titolo,
 
         @NotEmpty(message = "manca il contenuto")
